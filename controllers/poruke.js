@@ -2,30 +2,23 @@ const porukeRouter = require('express').Router()
 const Poruka = require('../models/poruka')
 
 porukeRouter.get('/', (req, res) => {
-  Poruka.find({}).then(rezultat => {    
+  Poruka.find({}).then(rezultat => {
     res.json(rezultat)
   })
 })
 
-porukeRouter.get('/:id', (req, res, next) => {
-  Poruka.findById(req.params.id)
-    .then(poruka => {
-      if (poruka) {
-        res.json(poruka)
-      } else {
-        res.status(404).end()
-      }
-
-    })
-    .catch(err => next(err))
+porukeRouter.get('/:id', async (req, res) => {
+  const poruka = await Poruka.findById(req.params.id)
+  if (poruka) {
+    res.json(poruka)
+  } else {
+    res.status(404).end()
+  }
 })
 
-porukeRouter.delete('/:id', (req, res) => {
-  Poruka.findByIdAndRemove(req.params.id)
-    .then(result => {
-      res.status(204).end()
-    })
-    .catch(err => next(err))
+porukeRouter.delete('/:id', async (req, res) => {
+  await Poruka.findByIdAndRemove(req.params.id)
+  res.status(204).end()
 })
 
 porukeRouter.put('/:id', (req, res) => {
@@ -37,15 +30,15 @@ porukeRouter.put('/:id', (req, res) => {
     vazno: podatak.vazno
   }
 
-  Poruka.findByIdAndUpdate(id,poruka, {new: true})
-  .then( novaPoruka => {
-    res.json(novaPoruka)
-  })
-  .catch(err => next(err))
+  Poruka.findByIdAndUpdate(id, poruka, { new: true })
+    .then(novaPoruka => {
+      res.json(novaPoruka)
+    })
+    .catch(err => next(err))
 
 })
 
-porukeRouter.post('/', (req, res, next) => {
+porukeRouter.post('/', async (req, res, next) => {
   const podatak = req.body
 
   const poruka = new Poruka({
@@ -53,12 +46,9 @@ porukeRouter.post('/', (req, res, next) => {
     vazno: podatak.vazno || false,
     datum: new Date()
   })
+  const spremljenaPoruka = await poruka.save()
+  res.json(spremljenaPoruka)
 
-  poruka.save()
-  .then(spremljenaPoruka => {
-    res.json(spremljenaPoruka)
-  })
-  .catch(err => next(err))
 })
 
 module.exports = porukeRouter
