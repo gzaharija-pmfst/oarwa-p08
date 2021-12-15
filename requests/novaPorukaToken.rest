@@ -1,6 +1,6 @@
 POST http://localhost:3001/api/poruke
 Content-Type: application/json
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Imd6YWhhcmlqYSIsImlkIjoiNWY5YzIzM2FmODdjY2Q0MmYwMGIzMGIwIiwiaWF0IjoxNjM4OTU5OTQyfQ.N4aMHHVHWklonm3cFs1g5gSlZ2UQMEs-lMgmgp52qQ0
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3QtcHJlZGF2YW5qZSIsImlkIjoiNjFiMGMxOGU4YWMzNTYwZjUwNzkyZmExIiwiaWF0IjoxNjM5NDcxODk1fQ.YLw-TV675_8AIb0dg6XRYm6Plyh9iH9rpHY0fKKFPx8
 
 {
   "sadrzaj": "Poruka sa krivim tokenom",

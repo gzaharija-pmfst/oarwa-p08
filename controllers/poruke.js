@@ -3,6 +3,7 @@ const Poruka = require('../models/poruka')
 const Korisnik = require('../models/korisnik')
 
 const jwt = require('jsonwebtoken')
+const mongoose = require('mongoose')
 
 const dohvatiToken = req => {
   const auth = req.get('authorization')
@@ -31,12 +32,29 @@ porukeRouter.get('/:id', (req, res, next) => {
     .catch(err => next(err))
 })
 
-porukeRouter.delete('/:id', (req, res) => {
-  Poruka.findByIdAndRemove(req.params.id)
+porukeRouter.delete('/:id', async (req, res) => {
+  console.log("Brisem poruku")
+  const token = dohvatiToken(req)
+  const dekToken = jwt.verify(token, process.env.SECRET)
+  if (!token || !dekToken.id){
+    return res.status(401).json({error: 'Neispravni token'})
+  }
+  console.log("ID KORISNIKA", dekToken.id)
+  //res.status(204).end()
+
+  /* Poruka.findOneAndDelete({korisnik: ObjectId("dekToken.id") }) */
+  const rez = await Poruka.findOneAndDelete({_id:  mongoose.Types.ObjectId(req.params.id) ,korisnik: mongoose.Types.ObjectId(dekToken.id) })
+  console.log(rez)
+  if(rez)
+    res.send(rez)
+  else
+    res.status(204).send({message: "Ne postoji traženi podatak"})
+
+/*   Poruka.findByIdAndRemove(req.params.id)
     .then(result => {
       res.status(204).end()
     })
-    .catch(err => next(err))
+    .catch(err => next(err)) */
 })
 
 porukeRouter.put('/:id', (req, res) => {
